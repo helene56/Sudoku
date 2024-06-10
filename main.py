@@ -72,17 +72,46 @@ def place_num(row, col, grid, num):
 # place first number
 matrix[0,0] = 1
 # test nums
-matrix[1,1] = 2
-matrix[2,0] = 2
+# matrix[1,1] = 2
+# matrix[2,0] = 2
 
+# lists containing rows
+# rows = [matrix[n+0] for n in range(9)]
+# cols = [matrix[:, n+0] for n in range(9)]
+# print(rows[0])
+# print(cols)
 # first row test
-row = matrix[0]
-# first col test
-col = matrix[:, 0]
-#  first grid test
-grid = matrix[:3, :3]
-num = 2
-if place_num(row, col, grid, num):
-    matrix[0,1] = num
+# row = matrix[0]
+# # first col test
+# col = matrix[:, 0]
+# #  first grid test
+# grid = matrix[:3, :3]
+# num = generate_num()
+
+# if place_num(row, col, grid, num):
+#     matrix[0,1] = num
+
+# print(matrix)
+
+num = generate_num()
+count = 0
+col_count = 0
+while count < 8:
+    
+    if place_num(matrix[count], matrix[:, count], matrix[:3, :3], num):
+        matrix[col_count,count + 1] = num
+        count += 1
+    if place_num(matrix[count], matrix[:, count], matrix[:3, :3], num):
+        matrix[col_count+1,count + 1] = num
+        count += 1
+    
+    # if count == 8:
+    #     if col_count < 8:
+    #         col_count += 1
+    #         count = 0
+        
+
+    num = generate_num()
+    
 
 print(matrix)
