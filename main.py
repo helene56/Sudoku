@@ -67,10 +67,12 @@ def place_num(row, col, grid, num):
     #         return True
     if num not in row and num not in col and num not in grid:
         return True
+    else:
+        return False
 
 
 # place first number
-matrix[0,0] = 1
+# matrix[0,0] = 1
 # test nums
 # matrix[1,1] = 2
 # matrix[2,0] = 2
@@ -96,22 +98,25 @@ matrix[0,0] = 1
 num = generate_num()
 count = 0
 col_count = 0
-while count < 8:
-    
-    if place_num(matrix[count], matrix[:, count], matrix[:3, :3], num):
-        matrix[col_count,count + 1] = num
+while count < 3:
+    print(f"col count: {col_count}")
+    print(f"count: {count}")
+    print(f"num: {num}")
+    result = place_num(matrix[count], matrix[:, count], matrix[:3, :3], num)
+    print(result)
+    if result:
+        matrix[col_count, count] = num
         count += 1
-    if place_num(matrix[count], matrix[:, count], matrix[:3, :3], num):
-        matrix[col_count+1,count + 1] = num
-        count += 1
-    
-    # if count == 8:
-    #     if col_count < 8:
-    #         col_count += 1
-    #         count = 0
+    else:
+        num = generate_num()
         
+    if col_count < 2 and count == 3:
+        col_count += 1
+        count = 0
 
-    num = generate_num()
+    
+
+    
     
 
 print(matrix)
