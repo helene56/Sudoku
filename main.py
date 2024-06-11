@@ -97,22 +97,42 @@ def place_num(row, col, grid, num):
 
 num = generate_num()
 count = 0
-col_count = 0
-while count < 3:
-    print(f"col count: {col_count}")
-    print(f"count: {count}")
-    print(f"num: {num}")
-    result = place_num(matrix[count], matrix[:, count], matrix[:3, :3], num)
-    print(result)
-    if result:
-        matrix[col_count, count] = num
-        count += 1
-    else:
-        num = generate_num()
+row_count = 0
+n = 0
+    
+# while count < 3:
+#     # print(f"col count: {col_count}")
+#     # print(f"count: {count}")
+#     # print(f"num: {num}")
+#     result = place_num(matrix[count], matrix[:, count], matrix[n:3+n, n:3+n], num)
+#     # print(result)
+#     if result:
+#         matrix[row_count, count] = num
+#         count += 1
+#     else:
+#         num = generate_num()
         
-    if col_count < 2 and count == 3:
-        col_count += 1
-        count = 0
+#     if row_count < 2 and count == 3:
+#         row_count += 1
+#         count = 0
+    
+
+
+for i in range(3):
+    print(f"i={i}")
+    count = 0
+    while count < 3:
+        
+        result = place_num(matrix[i], matrix[:, count], matrix[n:3+n, n:3+n], num)
+        # print(result)
+        if result:
+            matrix[i, count] = num
+            count += 1
+            
+        else:
+            num = generate_num()
+    
+        
 
     
 
