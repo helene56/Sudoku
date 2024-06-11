@@ -57,11 +57,8 @@ def search_number(matrix):
 
 matrix = np.zeros((9,9))
 
-def generate_num(num):
-    if num == 9:
-        num = 1
-    else:
-        num += 1
+def generate_num():
+    num = r.randint(1,9)
     return num
 
 def place_num(row, col, grid, num):
@@ -73,14 +70,55 @@ def place_num(row, col, grid, num):
     else:
         return False
 
+def backtrack_replace(row, col, grid, num, matrix): # backtracking to switch a number and check if it still fulfills requirements
+    row_possible_nums = []
+    col_possible_nums = []
+    # append possible numbers that fit in spot in array
+    if num not in row:
+        row_possible_nums.append(num)
+    if num not in col:
+        col_possible_nums.append(num)
+    for number in range(1,9):
+        if number not in row:
+           row_possible_nums.append(number)
+        if number not in col:
+            col_possible_nums.append(number)
+    # choose a possible num from row list that can go in spot
+    print(f"row possible nums: {row_possible_nums}")
+    print(f"col possible nums: {col_possible_nums}")
+    print(f"row: {row}")
+    print(f"col: {col}")
+    for n in row_possible_nums:
+        # print(f"n: {n}")
+        # find where the n *3 is present in the col, by locating its row
+        row_index = np.where(col == n)[0]
+        row_index = row_index[0]
+        for n2 in col_possible_nums:
+            # print(f"n2:{n2}")
+            # check if it is possible to switch n with a number from col
+            # first find the position of this n2 *9
+            col_index = np.where(row == n2)[0]
+            col_index = col_index[0]
+            if place_num(row_index, col_index, grid, n):
+                num1 = n
+                num2 = n2
+                matrix[row_index, col] = n2
+                matrix[row_index, col_index] = n
+                return True
+                
 
-num = generate_num(1)
+
+
+
+
+
+num = generate_num()
 count = 0
 row_count = 0
 n = 0
 
 max_count = 0
-
+num_used = []
 for j in range(3):
     # print(f"j={j}")
     for n in range(3):
@@ -95,9 +133,22 @@ for j in range(3):
                 if result:
                     matrix[row + (j*3), count + (n*3)] = num
                     count += 1
+                    num_used = []
                     
-                else: 
-                    num = generate_num(num)
+                else:
+                    
+                    num = generate_num()
+                    if num not in num_used:
+                        num_used.append(num)
+                    print(num_used)
+                    if len(num_used) == 9:
+                        if backtrack_replace(row=matrix[row + (j*3)], col=matrix[:, count + (n*3)], grid=matrix[0+(j*3):3+(j*3), (n*3):3+(n*3)], num=num, matrix=matrix):
+                            count += 1
+                    
+                    
+
+                    print(f"{matrix}\n")
+
                     
                     # print(f"{matrix}\n")
                     # print(f"row: {matrix[row + (j*3)]}\n col: {matrix[:, count + (n*3)]}\n grid:\n {matrix[0+(j*3):3+(j*3), (n*3):3+(n*3)]}\n")
