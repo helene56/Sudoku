@@ -57,8 +57,11 @@ def search_number(matrix):
 
 matrix = np.zeros((9,9))
 
-def generate_num():
-    num = r.randint(1,9)
+def generate_num(num):
+    if num == 9:
+        num = 1
+    else:
+        num += 1
     return num
 
 def place_num(row, col, grid, num):
@@ -71,66 +74,35 @@ def place_num(row, col, grid, num):
         return False
 
 
-# place first number
-# matrix[0,0] = 1
-# test nums
-# matrix[1,1] = 2
-# matrix[2,0] = 2
-
-# lists containing rows
-# rows = [matrix[n+0] for n in range(9)]
-# cols = [matrix[:, n+0] for n in range(9)]
-# print(rows[0])
-# print(cols)
-# first row test
-# row = matrix[0]
-# # first col test
-# col = matrix[:, 0]
-# #  first grid test
-# grid = matrix[:3, :3]
-# num = generate_num()
-
-# if place_num(row, col, grid, num):
-#     matrix[0,1] = num
-
-# print(matrix)
-
-num = generate_num()
+num = generate_num(1)
 count = 0
 row_count = 0
 n = 0
-    
-# while count < 3:
-#     # print(f"col count: {col_count}")
-#     # print(f"count: {count}")
-#     # print(f"num: {num}")
-#     result = place_num(matrix[count], matrix[:, count], matrix[n:3+n, n:3+n], num)
-#     # print(result)
-#     if result:
-#         matrix[row_count, count] = num
-#         count += 1
-#     else:
-#         num = generate_num()
-        
-#     if row_count < 2 and count == 3:
-#         row_count += 1
-#         count = 0
-    
 
+max_count = 0
 
-for i in range(3):
-    print(f"i={i}")
-    count = 0
-    while count < 3:
-        
-        result = place_num(matrix[i], matrix[:, count], matrix[n:3+n, n:3+n], num)
-        # print(result)
-        if result:
-            matrix[i, count] = num
-            count += 1
+for j in range(3):
+    # print(f"j={j}")
+    for n in range(3):
+        # print(f"n={n}")
+        for row in range(3):
+            # print(f"row={row}")
+            count = 0
+            while count < 3:
+                
+                result = place_num(matrix[row + (j*3)], matrix[:, count + (n*3)], matrix[0+(j*3):3+(j*3), (n*3):3+(n*3)], num)
+                # print(result)
+                if result:
+                    matrix[row + (j*3), count + (n*3)] = num
+                    count += 1
+                    
+                else: 
+                    num = generate_num(num)
+                    
+                    # print(f"{matrix}\n")
+                    # print(f"row: {matrix[row + (j*3)]}\n col: {matrix[:, count + (n*3)]}\n grid:\n {matrix[0+(j*3):3+(j*3), (n*3):3+(n*3)]}\n")
+                    # print(f"generated num: {num}")
             
-        else:
-            num = generate_num()
     
         
 
