@@ -42,23 +42,7 @@ def place_num(row, col, grid, num):
 def backtrack():
     pass
 
-def check_number(num_list, num):
-    # temp code
-    global count
-    if len(num_list) > 8:
-        # this means that every number has been added to the list, and therefore exhausted all possibilities, and thus should backtrack..
-        num_list = []
-        # temp code
-        count += 1
-        # backtrack
 
-    if num not in num_list:
-        # number has not been used before, it may continue with the rest of the code
-        # num_list.append(num)
-        return True
-    else:
-        # this number is already in the list, it should generate a new number now
-        return False
     
     
     
@@ -93,59 +77,91 @@ num_used = []
 
 
 # new loop construct where steps will be use instead of range loops to be able to backtrack
-def fill_grid(matrix, start, end, num):
+def fill_grid(matrix, start_row, end_row, start_col, num, max_iteration):
+    increment = False
     num_used = []
-    countrow = start
-    countcol = 0
-    while countrow < end:
-        result = place_num(matrix[countrow], matrix[:, countcol], matrix[start:end, 0:3], num)
-        # print(f"countrow: {countrow}, countcol: {countcol} ")
-        if result:
-            # print(f"\n {matrix}")
-            # print(f"col check: {matrix[:, countrow]}")
-            
-            matrix[countrow, countcol] = num
-            
-            countcol += 1
-            num_used = []
-        if countcol > 2:
-            countrow += 1
-            countcol = 0
-        else:
-            if check_number(num_used, num):
-                num_used.append(num)
-            else:
-                num = generate_num()
+    countrow = start_row
+    countcol = start_col
+    
+    while countrow < end_row:
         
+        if max_iteration > 0:
+            # print(matrix)
+            # print(f"num_used = {num_used}")
+            # print(f"num={num}")
+            # print(f"countrow: {countrow}")
+            # print(f"countcol: {countcol}")
+            result = place_num(matrix[countrow], matrix[:, countcol], matrix[start_row:end_row, 0 + start_col:3 + start_col], num)
+            # print(f"countrow: {countrow}, countcol: {countcol} ")
+            if result:
+                matrix[countrow, countcol] = num
+                
+                countcol += 1
+                num_used = []
+                num = generate_num()
+            
+            else:
+                if num not in num_used:
+                    num_used.append(num)
+                else:
+                    if len(num_used) > 8:
+                        matrix[start_row:end_row, 0 + start_col:3 + start_col] = 0
+            
+                        # reset previos to start
+                        max_iteration -= 1 # to control how many iterations area allowed
+                        countrow = start_row
+                        countcol = start_col
+                        num_used = []
+                        num = generate_num()
+                    
+                        # need to add backtrack here..
+                    else:
+                        if num == 1:
+                            increment = True
+                        elif num == 9:
+                            increment = False
+                        if increment:
+                            num += 1
+                        else:
+                            num -= 1
+                        
+                        
 
-# countrow = 0
-# countcol = 0
-# while countrow < 3:
-#     result = place_num(matrix[countrow], matrix[:, countrow], matrix[0:3, 0:3], num)
-#     if result:
-#         matrix[countrow, countcol] = num
-#         countcol += 1
-#         num_used = []
-#     if countcol > 2:
-#         countrow += 1
-#         countcol = 0
-          
-#     else:
-#         if check_number(num_used, num):
-#             num_used.append(num)
-#         else:
-#             num = generate_num()
+            if countcol > start_col + 3 - 1:
+                countrow += 1
+                countcol = start_col
+        else:
+            
+            print(max_iteration)
+            break
 
-number = generate_num()      
-# fill_grid(matrix, 0, 3, number)
-# fill_grid(matrix, 3, 6, number)
-# fill_grid(matrix, 6, 9, number)
+    
+    
+     
+max_iteration = 10
+number = generate_num()
 
-start = 0
-step = 3
-stop = 7
-for n in range(start, stop, step):
-    # print(n)
-    fill_grid(matrix, n, n+3, number)
+
+fill_grid(matrix, 0, 3, 0, number, max_iteration)    
+fill_grid(matrix, 0, 3, 3, number, max_iteration)
+fill_grid(matrix, 0, 3, 6, number, max_iteration)
+fill_grid(matrix, 3, 6, 0, number, max_iteration)
+fill_grid(matrix, 3, 6, 3, number, max_iteration)
+fill_grid(matrix, 3, 6, 6, number, max_iteration)
+fill_grid(matrix, 6, 9, 0, number, max_iteration)
+fill_grid(matrix, 6, 9, 3, number, max_iteration)
+fill_grid(matrix, 6, 9, 6, number, max_iteration)
+
+# note: by limiting the iterations makes it easier to judge if a succesful sudoku game is created. does not guarante a correct puzzle but by running the program multiple times,
+# it is possible to get a correct iteration. 
+# next step: make a algorithm that keeps iterating above steps till a success is had
+
+# start = 0
+# step = 3
+# stop = 7
+# # fills all grids in the 9x9 grid
+# for i in range(start, stop, step):
+#     for n in range(start, stop, step):
+#         fill_grid(matrix, i, i+3, n, number)
 
 print(matrix)
