@@ -124,4 +124,4 @@ completion_time = end_time - start_time
 #         fill_grid(matrix, i, i+3, n, number)
 
 print(matrix)
-print(f"time to complete {round(completion_time, 2)} seconds")
+print(f"time to complete: {round(completion_time, 2)} seconds")
