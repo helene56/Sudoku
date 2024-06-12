@@ -1,12 +1,7 @@
-#TODO: create 9x9 matrix random num from 1-9 times 9.
-#TODO: every row, column and grid must only contain one number once
-# might be better to backtrack after it tries to fill it out once first
 import numpy as np
 import random as r
+import time
 
-# matrix = np.random.randint(1, 9, size=(9 , 9))
-# print(matrix)
-# print("\n")
 def search_number(matrix):
     number = 1
     not_found = True
@@ -17,12 +12,7 @@ def search_number(matrix):
         else:
             number += 1
 
-
-
-# new approach: should fill the matrix with random num one by one, but if already present in the row, new one is generated
-# 3 check: row check, column check and subgrid check before placing a number
-
-
+# generate main grid
 matrix = np.zeros((9,9))
 
 def generate_num():
@@ -30,51 +20,16 @@ def generate_num():
     return num
 
 def place_num(row, col, grid, num):
-    # for element in matrix:
-    #     if element != num:
-    #         return True
     if num not in row and num not in col and num not in grid:
         return True
     else:
         return False
 
 
-def backtrack():
-    pass
-
-
-    
-    
-    
-    
-
 num = generate_num()
 count = 0
 
 num_used = []
-# for j in range(3):
-#     # print(f"j={j}")
-#     for n in range(3):
-#         # print(f"n={n}")
-#         for row in range(3):
-#             # print(f"row={row}")
-#             count = 0
-#             while count < 3:
-                
-#                 result = place_num(matrix[row + (j*3)], matrix[:, count + (n*3)], matrix[0+(j*3):3+(j*3), (n*3):3+(n*3)], num)
-#                 # print(result)
-#                 if result:
-#                     matrix[row + (j*3), count + (n*3)] = num
-#                     count += 1
-#                     num_used = []
-                    
-#                 else:
-#                     if check_number(num_used, num):
-#                         num_used.append(num)
-#                     else:
-#                         num = generate_num()
-
-
 
 # new loop construct where steps will be use instead of range loops to be able to backtrack
 def fill_grid(matrix, start_row, end_row, start_col, num, max_iteration):
@@ -132,7 +87,7 @@ def fill_grid(matrix, start_row, end_row, start_col, num, max_iteration):
                 countcol = start_col
         else:
             
-            print(max_iteration)
+            # print(max_iteration)
             break
 
     
@@ -141,17 +96,21 @@ def fill_grid(matrix, start_row, end_row, start_col, num, max_iteration):
 max_iteration = 10
 number = generate_num()
 
+start_time = time.time()
+while 0 in matrix:
+    fill_grid(matrix, 0, 3, 0, number, max_iteration)
+    fill_grid(matrix, 0, 3, 3, number, max_iteration)
+    fill_grid(matrix, 0, 3, 6, number, max_iteration)
+    fill_grid(matrix, 3, 6, 0, number, max_iteration)
+    fill_grid(matrix, 3, 6, 3, number, max_iteration)
+    fill_grid(matrix, 3, 6, 6, number, max_iteration)
+    fill_grid(matrix, 6, 9, 0, number, max_iteration)
+    fill_grid(matrix, 6, 9, 3, number, max_iteration)
+    fill_grid(matrix, 6, 9, 6, number, max_iteration)
+    # print(matrix)
+end_time = time.time()
 
-fill_grid(matrix, 0, 3, 0, number, max_iteration)    
-fill_grid(matrix, 0, 3, 3, number, max_iteration)
-fill_grid(matrix, 0, 3, 6, number, max_iteration)
-fill_grid(matrix, 3, 6, 0, number, max_iteration)
-fill_grid(matrix, 3, 6, 3, number, max_iteration)
-fill_grid(matrix, 3, 6, 6, number, max_iteration)
-fill_grid(matrix, 6, 9, 0, number, max_iteration)
-fill_grid(matrix, 6, 9, 3, number, max_iteration)
-fill_grid(matrix, 6, 9, 6, number, max_iteration)
-
+completion_time = end_time - start_time
 # note: by limiting the iterations makes it easier to judge if a succesful sudoku game is created. does not guarante a correct puzzle but by running the program multiple times,
 # it is possible to get a correct iteration. 
 # next step: make a algorithm that keeps iterating above steps till a success is had
@@ -165,3 +124,4 @@ fill_grid(matrix, 6, 9, 6, number, max_iteration)
 #         fill_grid(matrix, i, i+3, n, number)
 
 print(matrix)
+print(f"time to complete {round(completion_time, 2)} seconds")
